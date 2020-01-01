@@ -139,6 +139,19 @@ enum RGBLIGHT_EFFECT_MODE {
 #        include <avr/pgmspace.h>
 #    endif
 
+typedef struct {
+    int8_t enabled;
+    uint8_t index;
+    uint8_t h;
+    uint8_t s;
+    uint8_t v;
+} led_overlay_t;
+
+#define ENABLED_OVERLAY ((int8_t)1)
+#define DISABLED_OVERLAY ((int8_t)0)
+#define END_OVERLAY      ((int8_t)-99)
+
+extern led_overlay_t *led_overlay;
 extern LED_TYPE led[RGBLED_NUM];
 
 extern const uint8_t  RGBLED_BREATHING_INTERVALS[4] PROGMEM;

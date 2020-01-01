@@ -95,6 +95,8 @@ LED_TYPE led[RGBLED_NUM];
 #    define LED_ARRAY led
 #endif
 
+led_overlay_t *led_overlay = NULL;
+
 static uint8_t clipping_start_pos = 0;
 static uint8_t clipping_num_leds  = RGBLED_NUM;
 static uint8_t effect_start_pos   = 0;
@@ -600,6 +602,17 @@ void rgblight_sethsv_slave(uint8_t hue, uint8_t sat, uint8_t val) { rgblight_set
 void rgblight_set(void) {
     LED_TYPE *start_led;
     uint16_t  num_leds = clipping_num_leds;
+
+    // Put any defined overlays into the led buffer
+    if (led_overlay != NULL) {
+        for (uint8_t i = 0; i < RGBLED_NUM; i++) {
+            int8_t enabled = led_overlay[i].enabled;
+            if (enabled == END_OVERLAY) { break; }
+            else if (enabled == DISABLED_OVERLAY) { continue; }
+            uint8_t index = led_overlay[i].index;
+            sethsv(led_overlay[i].h, led_overlay[i].s, led_overlay[i].v, &led[index]);
+        }
+    }
 
     if (!rgblight_config.enable) {
         for (uint8_t i = effect_start_pos; i < effect_end_pos; i++) {
