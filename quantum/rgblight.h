@@ -140,18 +140,25 @@ enum RGBLIGHT_EFFECT_MODE {
 #    endif
 
 typedef struct {
-    int8_t enabled;
     uint8_t index;
     uint8_t h;
     uint8_t s;
     uint8_t v;
-} led_overlay_t;
+} rgblight_overlay_t;
 
-#define ENABLED_OVERLAY ((int8_t)1)
-#define DISABLED_OVERLAY ((int8_t)0)
-#define END_OVERLAY      ((int8_t)-99)
+#define RGBLIGHT_END_OVERLAY_INDEX      (255)
+#define RGBLIGHT_END_OVERLAYS {RGBLIGHT_END_OVERLAY_INDEX, 0, 0, 0}
 
-extern led_overlay_t *led_overlay;
+typedef struct {
+    bool enabled;
+    rgblight_overlay_t *overlays;
+} rgblight_layer_t;
+
+#define RGBLIGHT_END_LAYERS {false, NULL}
+
+// Assign this to an array of rgblight_layer_t in keyboard_post_init_user to use rgblight layers
+extern rgblight_layer_t *rgblight_layers;
+
 extern LED_TYPE led[RGBLED_NUM];
 
 extern const uint8_t  RGBLED_BREATHING_INTERVALS[4] PROGMEM;

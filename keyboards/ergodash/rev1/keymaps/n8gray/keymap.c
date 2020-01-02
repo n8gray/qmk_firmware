@@ -11,75 +11,93 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 uint32_t prev = BASE_LAYER;
 
 //#if 0
-
-static led_overlay_t mod_led_overlay[7] = {
-	{DISABLED_OVERLAY, 2, 0, 0xFF, 0xFF},  // Capslock x4
-	{DISABLED_OVERLAY, 3, 0, 0xFF, 0xFF},
-	{DISABLED_OVERLAY, 4, 0, 0xFF, 0xFF},
-	{DISABLED_OVERLAY, 5, 0, 0xFF, 0xFF},
-	{DISABLED_OVERLAY, 6, 0x22, 0xFF, 0xFF},  // Layer 1
-	{DISABLED_OVERLAY, 7, 0x99, 0xFF, 0xFF},  // Layer 2
-	{END_OVERLAY, 0, 0, 0xFF, 0xFF}
-};
-static void set_caps_lock_overlay_state(uint8_t state);
-static void set_layer_overlay_state(uint8_t layer, uint8_t state);
-
-void keyboard_post_init_user(void) {
-	led_overlay = &mod_led_overlay[0];
-}
+static void set_caps_lock_overlay_state(bool state);
+static void set_layer_overlay_state(uint8_t layer, bool state);
 
 // The idea here is to use the RGB LEDs as an indicator of what layer we're on.  The trick
 // is that qmk doesn't have a great way to save/restore state for the leds, so we have to 
 // hack something together ourselves.  It gets ugly because the rgb config keys are often in
 // a separate layer, so they get clobbered when you return to the base layer.
 uint32_t layer_state_set_user(uint32_t state) {
-  uint8_t layer = get_highest_layer(state);
+  	uint8_t layer = get_highest_layer(state);
 
-  if (prev == layer) {
-	  return state;
-  }
+  	if (prev == layer) {
+	  	return state;
+  	}
 
 	switch (layer) {
 	case BASE_LAYER:
-		set_layer_overlay_state(1, DISABLED_OVERLAY);
-		set_layer_overlay_state(2, DISABLED_OVERLAY);
+		set_layer_overlay_state(1, false);
+		set_layer_overlay_state(2, false);
 		print("base\n");
 		break;
 
 	case 1:
-		set_layer_overlay_state(1, ENABLED_OVERLAY);
-		set_layer_overlay_state(2, DISABLED_OVERLAY);
+		set_layer_overlay_state(1, true);
+		set_layer_overlay_state(2, false);
 
 		print("Layer 1\n");
 		break;
 	default: 
-		set_layer_overlay_state(1, DISABLED_OVERLAY);
-		set_layer_overlay_state(2, ENABLED_OVERLAY);
+		set_layer_overlay_state(1, false);
+		set_layer_overlay_state(2, true);
 		print("Layer 2\n");
 		break;
 	}
 	rgblight_set();
+
     prev = layer;
-  return state;
+  	return state;
 }
 
 // Called when the locking modifiers have state changes
 // XXX This doesn't get called when I hit caps lock??
 bool led_update_user(led_t led_state) {
 	uprintf("Caps_lock = %s\n", led_state.caps_lock ? "ON": "OFF");
-	set_caps_lock_overlay_state(led_state.caps_lock ? ENABLED_OVERLAY : DISABLED_OVERLAY);
+	set_caps_lock_overlay_state(led_state.caps_lock);
 	return true;
 }
 
-static void set_caps_lock_overlay_state(uint8_t state) {
-	mod_led_overlay[0].enabled = state;
-	mod_led_overlay[1].enabled = state;
-	mod_led_overlay[2].enabled = state;
-	mod_led_overlay[3].enabled = state;
+// Define overlays for each led layer
+static rgblight_overlay_t capslock_overlays[] = {
+	{4, 0, 0xFF, 0xFF},
+	{5, 5, 0xFF, 0xFF},
+	{6, 10, 0xFF, 0xFF},
+	{7, 15, 0xFF, 0xFF},
+	RGBLIGHT_END_OVERLAYS
+};
+static rgblight_overlay_t layer1_overlays[] = {
+	{9,  0x22, 0xFF, 0xFF}, 
+	{10, 0x27, 0xFF, 0xFF}, 
+	{11, 0x32, 0xFF, 0xFF}, 
+	RGBLIGHT_END_OVERLAYS
+};
+static rgblight_overlay_t layer2_overlays[] = {
+	{12, 0x99, 0xFF, 0xFF}, 
+	{13, 0xA4, 0xFF, 0xFF}, 
+	{14, 0xA9, 0xFF, 0xFF}, 
+	RGBLIGHT_END_OVERLAYS
+};
+
+// Now define the array of layers
+static rgblight_layer_t mod_led_layers[] = {
+	{false, capslock_overlays},
+	{false, layer1_overlays},
+	{false, layer2_overlays},
+	RGBLIGHT_END_LAYERS
+};
+
+void keyboard_post_init_user(void) {
+	// Enable the LED layers
+	rgblight_layers = &mod_led_layers[0];
 }
 
-static void set_layer_overlay_state(uint8_t layer, uint8_t state) {
-	mod_led_overlay[3 + layer].enabled = state;
+static void set_caps_lock_overlay_state(bool state) {
+	mod_led_layers[0].enabled = state;
+}
+
+static void set_layer_overlay_state(uint8_t layer, bool state) {
+	mod_led_layers[layer].enabled = state;
 }
 
 //#endif

@@ -95,7 +95,7 @@ LED_TYPE led[RGBLED_NUM];
 #    define LED_ARRAY led
 #endif
 
-led_overlay_t *led_overlay = NULL;
+rgblight_layer_t *rgblight_layers = NULL;
 
 static uint8_t clipping_start_pos = 0;
 static uint8_t clipping_num_leds  = RGBLED_NUM;
@@ -603,14 +603,12 @@ void rgblight_set(void) {
     LED_TYPE *start_led;
     uint16_t  num_leds = clipping_num_leds;
 
-    // Put any defined overlays into the led buffer
-    if (led_overlay != NULL) {
-        for (uint8_t i = 0; i < RGBLED_NUM; i++) {
-            int8_t enabled = led_overlay[i].enabled;
-            if (enabled == END_OVERLAY) { break; }
-            else if (enabled == DISABLED_OVERLAY) { continue; }
-            uint8_t index = led_overlay[i].index;
-            sethsv(led_overlay[i].h, led_overlay[i].s, led_overlay[i].v, &led[index]);
+    // Put any enabled layers into the led buffer
+    for (rgblight_layer_t *layer = rgblight_layers;  layer->overlays != NULL;  layer++) {
+        if (!layer->enabled) { continue; }
+        for (rgblight_overlay_t *led_overlay = layer->overlays;  led_overlay->index != RGBLIGHT_END_OVERLAY_INDEX;  led_overlay++) {
+            uint8_t index = led_overlay->index;
+            sethsv(led_overlay->h, led_overlay->s, led_overlay->v, &led[index]);
         }
     }
 
