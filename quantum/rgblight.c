@@ -36,6 +36,10 @@
 #    include "velocikey.h"
 #endif
 
+#ifndef MIN
+#    define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#endif
+
 #ifdef RGBLIGHT_SPLIT
 /* for split keyboard */
 #    define RGBLIGHT_SPLIT_SET_CHANGE_MODE rgblight_status.change_flags |= RGBLIGHT_STATUS_CHANGE_MODE
@@ -95,7 +99,7 @@ LED_TYPE led[RGBLED_NUM];
 #    define LED_ARRAY led
 #endif
 
-rgblight_layer_t *rgblight_layers = NULL;
+rgblight_overlay_t * const *rgblight_layers = NULL;
 
 static uint8_t clipping_start_pos = 0;
 static uint8_t clipping_num_leds  = RGBLED_NUM;
@@ -598,17 +602,36 @@ void rgblight_sethsv_master(uint8_t hue, uint8_t sat, uint8_t val) { rgblight_se
 void rgblight_sethsv_slave(uint8_t hue, uint8_t sat, uint8_t val) { rgblight_sethsv_range(hue, sat, val, (uint8_t)RGBLED_NUM / 2, (uint8_t)RGBLED_NUM); }
 #endif  // ifndef RGBLIGHT_SPLIT
 
+void rgblight_set_layer_state(uint8_t layer, bool enabled) {
+    uint8_t mask = 1 << layer;
+    if (enabled) {
+        rgblight_status.enabled_layer_mask |= mask;
+    } else {
+        rgblight_status.enabled_layer_mask &= ~mask;
+    }
+    rgblight_status.change_flags |= RGBLIGHT_STATUS_CHANGE_LAYERS;
+}
+
+bool rgblight_get_layer_state(uint8_t layer) {
+    uint8_t mask = 1 << layer;
+    return (rgblight_status.enabled_layer_mask & mask) > 0;
+}
+
 #ifndef RGBLIGHT_CUSTOM_DRIVER
 void rgblight_set(void) {
     LED_TYPE *start_led;
     uint16_t  num_leds = clipping_num_leds;
 
-    // Put any enabled layers into the led buffer
-    for (rgblight_layer_t *layer = rgblight_layers;  layer->overlays != NULL;  layer++) {
-        if (!layer->enabled) { continue; }
-        for (rgblight_overlay_t *led_overlay = layer->overlays;  led_overlay->index != RGBLIGHT_END_OVERLAY_INDEX;  led_overlay++) {
-            uint8_t index = led_overlay->index;
-            sethsv(led_overlay->h, led_overlay->s, led_overlay->v, &led[index]);
+    // Write any enabled LED layers into the buffer
+    if (rgblight_layers != NULL) {
+        uint8_t i = 0;
+        for (rgblight_overlay_t * const *layer_ptr = rgblight_layers; *layer_ptr != NULL && i < 8; layer_ptr++, i++) {
+            if (rgblight_get_layer_state(i)) {
+                for (rgblight_overlay_t const * led_overlay = *layer_ptr; led_overlay->index != RGBLIGHT_END_OVERLAY_INDEX; led_overlay++) {
+                    uint8_t index = MIN(led_overlay->index, RGBLED_NUM - 1);
+                    sethsv(led_overlay->h, led_overlay->s, led_overlay->v, &led[index]);
+                }
+            }
         }
     }
 
@@ -655,6 +678,9 @@ void rgblight_get_syncinfo(rgblight_syncinfo_t *syncinfo) {
 
 /* for split keyboard slave side */
 void rgblight_update_sync(rgblight_syncinfo_t *syncinfo, bool write_to_eeprom) {
+    if (syncinfo->status.change_flags & RGBLIGHT_STATUS_CHANGE_LAYERS) {
+        rgblight_status.enabled_layer_mask = syncinfo->status.enabled_layer_mask;
+    }
     if (syncinfo->status.change_flags & RGBLIGHT_STATUS_CHANGE_MODE) {
         if (syncinfo->config.enable) {
             rgblight_config.enable = 1;  // == rgblight_enable_noeeprom();

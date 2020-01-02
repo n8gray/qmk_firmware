@@ -149,15 +149,12 @@ typedef struct {
 #define RGBLIGHT_END_OVERLAY_INDEX      (255)
 #define RGBLIGHT_END_OVERLAYS {RGBLIGHT_END_OVERLAY_INDEX, 0, 0, 0}
 
-typedef struct {
-    bool enabled;
-    rgblight_overlay_t *overlays;
-} rgblight_layer_t;
+// Get/set enabled rgblight layers
+void rgblight_set_layer_state(uint8_t layer, bool enabled);
+bool rgblight_get_layer_state(uint8_t layer);
 
-#define RGBLIGHT_END_LAYERS {false, NULL}
-
-// Assign this to an array of rgblight_layer_t in keyboard_post_init_user to use rgblight layers
-extern rgblight_layer_t *rgblight_layers;
+// Point this to an array of rgblight_overlay_t arrays in keyboard_post_init_user to use rgblight layers
+extern rgblight_overlay_t * const *rgblight_layers;
 
 extern LED_TYPE led[RGBLED_NUM];
 
@@ -188,6 +185,7 @@ typedef struct _rgblight_status_t {
 #    ifdef RGBLIGHT_SPLIT
     uint8_t change_flags;
 #    endif
+    uint8_t enabled_layer_mask;
 } rgblight_status_t;
 
 /* === Utility Functions ===*/
@@ -289,6 +287,7 @@ void rgblight_timer_toggle(void);
 #        define RGBLIGHT_STATUS_CHANGE_HSVS (1 << 1)
 #        define RGBLIGHT_STATUS_CHANGE_TIMER (1 << 2)
 #        define RGBLIGHT_STATUS_ANIMATION_TICK (1 << 3)
+#        define RGBLIGHT_STATUS_CHANGE_LAYERS (1 << 4)
 
 typedef struct _rgblight_syncinfo_t {
     rgblight_config_t config;
