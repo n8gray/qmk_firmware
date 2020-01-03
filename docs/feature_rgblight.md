@@ -172,6 +172,64 @@ const uint8_t RGBLED_KNIGHT_INTERVALS[] PROGMEM = {127, 63, 31};
 const uint8_t RGBLED_GRADIENT_RANGES[] PROGMEM = {255, 170, 127, 85, 64};
 ```
 
+## Lighting Layers
+
+By including `#define RGBLIGHT_SPLIT` in your `config.h` file you can enable lighting layers. These make
+it easy to use your underglow LEDs as status indicators to show which keyboard layer is currently active, or the state of caps lock, all without disrupting any animations.
+
+To define a layer, we modify `keymap.c` to list out LED indexes and the colors we want to overlay on them using an array of `rgblight_overlay_t`. We can define multiple layers and enable/disable them independently:
+
+```c
+// Light LEDs 8 and 9 red when caps lock is active
+static rgblight_overlay_t capslock_overlays[] = {
+	{8, HSV_RED},
+	{9, HSV_RED},
+	RGBLIGHT_END_OVERLAYS  // Special terminator to end array of overlays
+};
+// Light two more LEDs in cyan when keyboard layer 1 is active
+static rgblight_overlay_t layer1_overlays[] = {
+	{10, HSV_CYAN}, 
+	{11, HSV_CYAN}, 
+	RGBLIGHT_END_OVERLAYS
+};
+// etc..
+```
+
+We combine these layers into an array, and assign it to the `rgblight_layers` variable during keyboard setup:
+
+```c
+// Now define the array of layers. Later layers take precedence
+static rgblight_overlay_t * const mod_led_layers[] = {
+	capslock_overlays,
+	layer1_overlays,
+	layer2_overlays,
+	NULL  // Layer array must be NULL terminated
+};
+
+void keyboard_post_init_user(void) {
+	// Enable the LED layers
+	rgblight_layers = mod_led_layers;
+}
+```
+
+Finally, we enable and disable the lighting layers whenever the state of the keyboard changes:
+
+```c
+#define BIT_SET(intval, bitnum) ((intval & (1 << bitnum)) > 0)
+
+uint32_t layer_state_set_user(uint32_t state) {
+	// Both overlays will light up if both kb layers are active
+	rgblight_set_layer_state(1, BIT_SET(state, 1));
+	rgblight_set_layer_state(2, BIT_SET(state, 2));
+	return state;
+}
+
+bool led_update_user(led_t led_state) {
+	rgblight_set_layer_state(0, led_state.caps_lock);
+	return true;
+}
+```
+
 ## Functions
 
 If you need to change your RGB lighting in code, for example in a macro to change the color whenever you switch layers, QMK provides a set of functions to assist you. See [`rgblight.h`](https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight.h) for the full list, but the most commonly used functions include:
