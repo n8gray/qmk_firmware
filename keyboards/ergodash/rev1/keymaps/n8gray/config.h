@@ -41,3 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Try to get the rgb lights to turn off when the computer is sleeping. Doesn't seem to work reliably.
 #define RGBLIGHT_SLEEP
+
+// Enable lighting layers
+#define RGBLIGHT_LAYERS

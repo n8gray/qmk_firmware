@@ -51,7 +51,6 @@ void keyboard_post_init_user(void) {
 uint32_t layer_state_set_user(uint32_t state) {
 	rgblight_set_layer_state(1, BIT_SET(state, 1));
 	rgblight_set_layer_state(2, BIT_SET(state, 2));
-	rgblight_set();
   	return state;
 }
 
