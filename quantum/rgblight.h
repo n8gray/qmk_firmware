@@ -139,6 +139,7 @@ enum RGBLIGHT_EFFECT_MODE {
 #        include <avr/pgmspace.h>
 #    endif
 
+#    ifdef RGBLIGHT_LAYERS
 typedef struct {
     uint8_t index;
     uint8_t h;
@@ -146,8 +147,9 @@ typedef struct {
     uint8_t v;
 } rgblight_overlay_t;
 
-#define RGBLIGHT_END_OVERLAY_INDEX      (255)
-#define RGBLIGHT_END_OVERLAYS {RGBLIGHT_END_OVERLAY_INDEX, 0, 0, 0}
+#        define RGBLIGHT_END_OVERLAY_INDEX      (255)
+#        define RGBLIGHT_END_OVERLAYS {RGBLIGHT_END_OVERLAY_INDEX, 0, 0, 0}
+#        define RGBLIGHT_MAX_LAYERS 8
 
 // Get/set enabled rgblight layers
 void rgblight_set_layer_state(uint8_t layer, bool enabled);
@@ -155,6 +157,7 @@ bool rgblight_get_layer_state(uint8_t layer);
 
 // Point this to an array of rgblight_overlay_t arrays in keyboard_post_init_user to use rgblight layers
 extern rgblight_overlay_t * const *rgblight_layers;
+#    endif
 
 extern LED_TYPE led[RGBLED_NUM];
 
@@ -185,7 +188,9 @@ typedef struct _rgblight_status_t {
 #    ifdef RGBLIGHT_SPLIT
     uint8_t change_flags;
 #    endif
+#    ifdef RGBLIGHT_LAYERS
     uint8_t enabled_layer_mask;
+#    endif
 } rgblight_status_t;
 
 /* === Utility Functions ===*/
