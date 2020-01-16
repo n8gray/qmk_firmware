@@ -37,6 +37,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // When we use TT it should work with only 2 taps, not 5
 #define TAPPING_TOGGLE 2
+// Have 200ms to double-tap
+#undef TAPPING_TERM
+#define TAPPING_TERM 200
 
 // The LEDs on the slave half go in reverse order
 #define RGBLIGHT_LED_MAP { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, \
