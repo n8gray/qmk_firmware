@@ -17,6 +17,14 @@ enum layer_names {
   _ADJUST,
 };
 
+#define SYMBOL_LAYER1 		_______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5, KC_MNXT, 				KC_VOLU,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  _______ 
+#define SYMBOL_LAYER2		 KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5, KC_MPRV, 				KC_VOLD,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_MINUS
+#define SYMBOL_LAYER3		KC_TILD, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, KC_MPLY, 				KC_MUTE, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS
+#define SYMBOL_LAYER4		_______, _______, KC_LBRC, KC_RBRC, KC_LCBR, KC_RCBR, _______, 				_______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, KC_PGUP, _______
+#define SYMBOL_LAYER5		_______, _______, _______, _______, _______, _______, _______, 				_______, _______, KC_UNDS, _______, KC_HOME, KC_PGDOWN, KC_END
+
+#define EXPAND_LAYER(l1, l2, l3, l4, l5) LAYOUT_4key(l1, l2, l3, l4, l5)
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_QWERTY] = LAYOUT_4key(
 	   KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5, KC_MINS,                 KC_EQL,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSPC,
@@ -25,24 +33,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	  KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_GRV,                KC_RGUI,    KC_N,    KC_M, KC_COMM,  KC_DOT,   KC_UP, KC_RSFT,
 	  KC_CAPS, KC_MUTE,   TT(_NAV), KC_LALT,          KC_LGUI,   LOWER, KC_DEL, KC_ENT,  RAISE,  KC_SPC,         KC_SLASH, KC_LEFT, KC_DOWN, KC_RGHT
 	  ),
-	[_LOWER] = LAYOUT_4key(
-		_______, _______, _______, _______, _______, _______, _______, 				_______, _______, _______, _______, _______, _______, _______, 
-		 KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5, _______, 							_______, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINUS, 
-		KC_TILD, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, _______, 				_______, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS,
-		_______, _______, KC_LBRC, KC_RBRC, KC_LCBR, KC_RCBR, _______, 				_______, KC_LCBR, KC_RCBR, KC_LBRACKET, KC_RBRACKET, KC_PGUP, _______, 
-		_______, _______, _______, _______, _______, _______, _______, 				_______, _______, KC_UNDS, _______, KC_HOME, KC_PGDOWN, KC_END
+	[_LOWER] = EXPAND_LAYER(
+		SYMBOL_LAYER1,
+		SYMBOL_LAYER2,
+		SYMBOL_LAYER3,
+		SYMBOL_LAYER4,
+		SYMBOL_LAYER5
 		),
-	[_RAISE] = LAYOUT_4key(
-		_______, _______, _______, _______, _______, _______, _______, 				_______, _______, _______, _______, _______, _______, _______, 
-		 KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5, _______, 							_______, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINUS, 
-		KC_TILD, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, _______, 				_______, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS,
-		_______, _______, KC_LBRC, KC_RBRC, KC_LCBR, KC_RCBR, _______, 				_______, KC_LCBR, KC_RCBR, KC_LBRACKET, KC_RBRACKET, KC_PGUP, _______, 
-		_______, _______, _______, _______, _______, _______, _______, 				_______, _______, KC_UNDS, _______, KC_HOME, KC_PGDOWN, KC_END
+	[_RAISE] = EXPAND_LAYER(
+		SYMBOL_LAYER1,
+		SYMBOL_LAYER2,
+		SYMBOL_LAYER3,
+		SYMBOL_LAYER4,
+		SYMBOL_LAYER5
 		),
 	[_NAV] = LAYOUT_4key(
-		_______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, _______, 						_______, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F12, 
-		_______, _______, KC_HOME, KC_UP, KC_END, KC_PGUP, _______, 				_______, KC_PGUP, KC_HOME, KC_UP, KC_END, _______, KC_F11, 
-		_______, _______, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, _______, 				_______, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_LBRACKET, KC_RBRACKET, 
+		_______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5, KC_MNXT, 				KC_VOLU,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  _______,
+		_______, _______, KC_HOME, KC_UP,   KC_END,  KC_PGUP, KC_MPRV, 				KC_VOLD, KC_PGUP, KC_HOME, KC_UP, KC_END, _______, _______, 
+		_______, _______, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, KC_MPLY, 				KC_MUTE, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_LBRACKET, KC_RBRACKET, 
 		_______, _______, KC_LCBR, KC_RCBR, KC_LPRN, KC_RPRN, _______, 				_______, KC_LPRN, KC_RPRN, KC_LCBR, KC_RCBR, KC_PGUP, _______, 
 		_______, _______, _______, _______, _______, _______, _______, 			    _______, _______, KC_UNDS, _______, KC_HOME, KC_PGDOWN, KC_END
 		),
@@ -51,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		_______, _______, _______, _______, _______, _______, RGB_VAD, 				RGB_HUD, _______, _______, _______, _______, _______, _______,
 		_______, _______, _______, _______, _______, RGB_SPI, RGB_TOG, 				RGB_MOD, RGB_SAI, _______, _______, _______, _______, _______,
 		_______, _______, _______, _______, _______, RGB_SPD, RGB_MOD, 				RGB_RMOD, RGB_SAD, _______, _______, _______, _______, _______,
-		_______, _______, _______, _______, _______, _______, _______, 			_______, _______, _______, _______, _______, _______, _______
+		_______, _______, _______, _______, _______, _______, _______, 				_______, _______, _______, _______, _______, _______, _______
 		)
 };
 
