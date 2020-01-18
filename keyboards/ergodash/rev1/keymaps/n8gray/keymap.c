@@ -18,9 +18,9 @@ enum layer_names {
 };
 
 #define SYMBOL_LAYER1 		_______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5, KC_MNXT, 				KC_VOLU,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  _______ 
-#define SYMBOL_LAYER2		 KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5, KC_MPRV, 				KC_VOLD,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_MINUS
+#define SYMBOL_LAYER2		 KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5, KC_MPRV, 				KC_VOLD,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_MINS
 #define SYMBOL_LAYER3		KC_TILD, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, KC_MPLY, 				KC_MUTE, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS
-#define SYMBOL_LAYER4		_______, _______, KC_LBRC, KC_RBRC, KC_LCBR, KC_RCBR, _______, 				_______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, KC_PGUP, _______
+#define SYMBOL_LAYER4		_______, KC_SLASH, KC_MINS,  KC_EQL, KC_PLUS, KC_ASTR, _______, 				_______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, KC_PGUP, _______
 #define SYMBOL_LAYER5		_______, _______, _______, _______, _______, _______, _______, 				_______, _______, KC_UNDS, _______, KC_HOME, KC_PGDOWN, KC_END
 
 #define EXPAND_LAYER(l1, l2, l3, l4, l5) LAYOUT_4key(l1, l2, l3, l4, l5)
