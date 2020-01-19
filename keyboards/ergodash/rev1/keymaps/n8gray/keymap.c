@@ -68,30 +68,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define LAYER_VAL 120
 
 // Define led segments for each layer
-static rgblight_segment_t capslock_segments[] = {
+const rgblight_segment_t PROGMEM capslock_segments[] = {
 	{9, 6, 0, 255, LAYER_VAL},
 	RGBLIGHT_END_SEGMENTS
 };
-static rgblight_segment_t lower_segments[] = {
+const rgblight_segment_t PROGMEM lower_segments[] = {
 	{10, 2, 10, 255, LAYER_VAL}, 
 	RGBLIGHT_END_SEGMENTS
 };
-static rgblight_segment_t raise_segments[] = {
+const rgblight_segment_t PROGMEM raise_segments[] = {
 	{12, 2, 85, 255, LAYER_VAL}, 
 	RGBLIGHT_END_SEGMENTS
 };
-static rgblight_segment_t nav_segments[] = {
+const rgblight_segment_t PROGMEM nav_segments[] = {
 	{9, 2, 64, 255, LAYER_VAL}, 
 	{13, 2, 64, 255, LAYER_VAL}, 
 	RGBLIGHT_END_SEGMENTS
 };
-static rgblight_segment_t adjust_segments[] = {
+const rgblight_segment_t PROGMEM adjust_segments[] = {
 	{10, 4, 20, 255, LAYER_VAL}, 
 	RGBLIGHT_END_SEGMENTS
 };
 
 // Now define the array of layers. Later layers take precedence
-static rgblight_segment_t * const mod_led_layers[] = {
+const rgblight_segment_t* const PROGMEM mod_led_layers[] = {
 	capslock_segments,
 	lower_segments,
 	raise_segments,
