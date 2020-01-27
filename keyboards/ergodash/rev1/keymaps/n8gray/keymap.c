@@ -20,7 +20,7 @@ enum layer_names {
 #define SYMBOL_LAYER1 		_______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5, KC_MNXT, 				KC_VOLU,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  _______ 
 #define SYMBOL_LAYER2		 KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5, KC_MPRV, 				KC_VOLD,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_MINS
 #define SYMBOL_LAYER3		KC_TILD, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, KC_MPLY, 				KC_MUTE, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS
-#define SYMBOL_LAYER4		_______, KC_SLASH, KC_MINS,  KC_EQL, KC_PLUS, KC_ASTR, _______, 				_______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, KC_PGUP, _______
+#define SYMBOL_LAYER4		_______, KC_PSLS, KC_PMNS, KC_PEQL, KC_PPLS, KC_PAST, _______, 				_______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, KC_PGUP, _______
 #define SYMBOL_LAYER5		_______, _______, _______, _______, _______, _______, _______, 				_______, _______, KC_UNDS, _______, KC_HOME, KC_PGDOWN, KC_END
 
 #define EXPAND_LAYER(l1, l2, l3, l4, l5) LAYOUT_4key(l1, l2, l3, l4, l5)
@@ -50,8 +50,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_NAV] = LAYOUT_4key(
 		_______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5, KC_MNXT, 				KC_VOLU,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  _______,
 		_______, _______, KC_HOME, KC_UP,   KC_END,  KC_PGUP, KC_MPRV, 				KC_VOLD, KC_PGUP, KC_HOME, KC_UP, KC_END, _______, _______, 
-		_______, _______, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, KC_MPLY, 				KC_MUTE, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_LBRACKET, KC_RBRACKET, 
-		_______, _______, KC_LCBR, KC_RCBR, KC_LPRN, KC_RPRN, _______, 				_______, KC_LPRN, KC_RPRN, KC_LCBR, KC_RCBR, KC_PGUP, _______, 
+		_______, _______, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, KC_MPLY, 				KC_MUTE, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, 
+		_______, _______, _______, _______, _______, _______, _______, 				_______, _______, _______, _______, _______, KC_PGUP, _______, 
 		_______, _______, _______, _______, _______, _______, _______, 			    _______, _______, KC_UNDS, _______, KC_HOME, KC_PGDOWN, KC_END
 		),
 	[_ADJUST] = LAYOUT_4key(
@@ -68,37 +68,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define LAYER_VAL 120
 
 // Define led segments for each layer
-const rgblight_segment_t PROGMEM capslock_segments[] = {
-	{9, 6, 0, 255, LAYER_VAL},
-	RGBLIGHT_END_SEGMENTS
-};
-const rgblight_segment_t PROGMEM lower_segments[] = {
-	{10, 2, 10, 255, LAYER_VAL}, 
-	RGBLIGHT_END_SEGMENTS
-};
-const rgblight_segment_t PROGMEM raise_segments[] = {
-	{12, 2, 85, 255, LAYER_VAL}, 
-	RGBLIGHT_END_SEGMENTS
-};
-const rgblight_segment_t PROGMEM nav_segments[] = {
+const rgblight_segment_t PROGMEM capslock_segments[] = RGBLIGHT_LAYER_SEGMENTS(
+	{9, 6, 0, 255, LAYER_VAL}
+);
+const rgblight_segment_t PROGMEM lower_segments[] = RGBLIGHT_LAYER_SEGMENTS(
+	{10, 2, 10, 255, LAYER_VAL}
+);
+const rgblight_segment_t PROGMEM raise_segments[] = RGBLIGHT_LAYER_SEGMENTS(
+	{12, 2, 85, 255, LAYER_VAL}
+);
+const rgblight_segment_t PROGMEM nav_segments[] = RGBLIGHT_LAYER_SEGMENTS(
 	{9, 2, 64, 255, LAYER_VAL}, 
-	{13, 2, 64, 255, LAYER_VAL}, 
-	RGBLIGHT_END_SEGMENTS
-};
-const rgblight_segment_t PROGMEM adjust_segments[] = {
-	{10, 4, 20, 255, LAYER_VAL}, 
-	RGBLIGHT_END_SEGMENTS
-};
+	{13, 2, 64, 255, LAYER_VAL}
+);
+const rgblight_segment_t PROGMEM adjust_segments[] = RGBLIGHT_LAYER_SEGMENTS(
+	{10, 4, 20, 255, LAYER_VAL}
+);
 
 // Now define the array of layers. Later layers take precedence
-const rgblight_segment_t* const PROGMEM mod_led_layers[] = {
+const rgblight_segment_t* const PROGMEM mod_led_layers[] = RGBLIGHT_LAYERS_LIST(
 	capslock_segments,
 	lower_segments,
 	raise_segments,
 	nav_segments,
-	adjust_segments,
-	NULL
-};
+	adjust_segments
+);
 
 void keyboard_post_init_user(void) {
 	// Enable the LED layers
