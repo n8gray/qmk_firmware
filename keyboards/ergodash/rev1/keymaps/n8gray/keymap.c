@@ -17,7 +17,7 @@ enum layer_names {
   _ADJUST,
 };
 
-#define SYMBOL_LAYER1 		_______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5, KC_MNXT, 				KC_VOLU,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  _______ 
+#define SYMBOL_LAYER1 		_______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5, KC_MNXT, 				KC_VOLU,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_DEL 
 #define SYMBOL_LAYER2		 KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5, KC_MPRV, 				KC_VOLD,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_MINS
 #define SYMBOL_LAYER3		KC_TILD, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, KC_MPLY, 				KC_MUTE, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS
 #define SYMBOL_LAYER4		_______, KC_PSLS, KC_PMNS, KC_PEQL, KC_PPLS, KC_PAST, _______, 				_______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, KC_PGUP, _______
