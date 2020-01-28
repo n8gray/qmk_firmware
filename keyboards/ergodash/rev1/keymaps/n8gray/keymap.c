@@ -118,6 +118,7 @@ uint32_t layer_state_set_user(uint32_t state) {
 bool led_update_user(led_t led_state) {
 	//uprintf("Caps_lock = %s  (%d)\n", led_state.caps_lock ? "ON": "OFF", led_state.raw);
 	rgblight_set_layer_state(0, led_state.caps_lock);
+	rgblight_set();
 	return true;
 }
 
